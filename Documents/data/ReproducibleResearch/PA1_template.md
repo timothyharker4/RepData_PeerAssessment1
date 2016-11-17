@@ -1,7 +1,10 @@
 # Reproducible Research Week 2 Project
 
-1. Read activity data in to R, total the number of steps taken each day, and
-   convert date column from factor to date variable type
+
+## Loading and preprocessing the data
+
+Read activity data in to R, total the number of steps taken each day, and
+convert date column from factor to date variable type
 
 ```r
 activitydata <- read.csv("./activity.csv")
@@ -10,7 +13,10 @@ activitytable <- aggregate(activitydata$steps, by=list(activitydata$date), sum)
 colnames(activitytable) <- c("date", "TotalStepsTaken")
 ```
 
-2. Report mean and median of total steps taken each day
+
+## Mean and median number of steps taken each day
+
+Report mean and median of total steps taken each day
 
 ```r
 mean(activitytable$TotalStepsTaken, na.rm=TRUE)
@@ -28,7 +34,7 @@ median(activitytable$TotalStepsTaken, na.rm=TRUE)
 ## [1] 10765
 ```
 
-4. Create a histogram of the total number of steps taken each day
+Create a histogram of the total number of steps taken each day
 
 ```r
 hist(activitytable$TotalStepsTaken)
@@ -36,8 +42,11 @@ hist(activitytable$TotalStepsTaken)
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
-5. Create a time series plot of the average number of steps taken during each
-   interval
+
+## Average daily activity pattern
+
+Create a time series plot of the average number of steps taken during each
+interval
 
 ```r
 intervaltable <- aggregate(activitydata$steps, by=list(activitydata$interval), 
@@ -48,7 +57,7 @@ plot(intervaltable$interval, intervaltable$AverageNumberofSteps, type="l")
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
 
-6. Identify interval with the highest average number of steps
+Identify interval with the highest average number of steps
 
 ```r
 intervaltable[intervaltable[,2]==max(intervaltable$AverageNumberofSteps), 1]
@@ -58,7 +67,10 @@ intervaltable[intervaltable[,2]==max(intervaltable$AverageNumberofSteps), 1]
 ## [1] 835
 ```
 
-7. Calculate number of rows with missing data
+
+## Input missing values
+
+Calculate number of rows with missing data
 
 ```r
 table(is.na(activitydata$steps))
@@ -70,15 +82,15 @@ table(is.na(activitydata$steps))
 ## 15264  2304
 ```
 
-8. Substitute missing data with average number of steps taken, rounded down, 
+Substitute missing data with average number of steps taken, rounded down, 
    for the recorded interval
 
 ```r
 activitydata[is.na(activitydata$steps),1] <- floor(intervaltable[which(activitydata[is.na(activitydata$steps),3]==intervaltable[1]), 2])
 ```
 
-9. Create new table and histogram detailing the total number of steps taken
-   according to the updated data set
+Create new table and histogram detailing the total number of steps taken
+according to the updated data set
 
 ```r
 activitynoNA <- aggregate(activitydata$steps, by=list(activitydata$date), sum)
@@ -88,7 +100,7 @@ hist(activitynoNA$TotalStepsTaken)
 
 ![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png)
 
-10. Calculate mean and median number of steps taken each day for the new data set
+Calculate mean and median number of steps taken each day for the new data set
 
 ```r
 mean(activitynoNA$TotalStepsTaken)
@@ -110,9 +122,11 @@ As a result of replacing the missing values with the average number of steps
 taken during the recorded interval, the mean and median number of steps taken
 each day both slightly decreased.  
 
-11. Create a new factor variable called DayType that is assigned the value
-    "Weekend" if the weekdays() function returns the value "Saturday" or 
-    "Sunday" or is assigned the value "Weekday"
+
+## Differences between weekdays and weekendsset
+Create a new factor variable called DayType that is assigned the value
+"Weekend" if the weekdays() function returns the value "Saturday" or 
+"Sunday" or is assigned the value "Weekday"
 
 ```r
 activitydata$DayType <- factor(NA, c("Weekday","Weekend"))
@@ -125,8 +139,8 @@ for (i in 1:nrow(activitydata)){
       else {activitydata[i,4] <- "Weekday"}}
 ```
 
-12. Calculate average number of steps taken for each interval during a "Weekday"
-    and a "Weekend"
+Calculate average number of steps taken for each interval during a "Weekday"
+and a "Weekend"
 
 ```r
 DayTypeTable <- aggregate(activitydata$steps, 
@@ -135,8 +149,8 @@ DayTypeTable <- aggregate(activitydata$steps,
 colnames(DayTypeTable) <- c("DayType", "Interval", "AverageStepsTaken")
 ```
 
-13. Create a time series plot of the average number of steps taken during each
-    measured interval for "Weekday" days and "Weekend" days
+Create a time series plot of the average number of steps taken during each
+measured interval for "Weekday" days and "Weekend" days
 
 ```r
     library(lattice)
